@@ -1,29 +1,29 @@
 package com.example.firebase_practtical;
 
 public class Item {
-
     private String id;
     private String name;
 
-    // No-argument constructor required for Firebase
-    public Item() {}
+    // Required empty constructor
+
+    public Item() {
+    }
 
     public Item(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    // Getters and setters
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -32,6 +32,12 @@ public class Item {
 
     @Override
     public String toString() {
-        return name; // Used by ArrayAdapter to display in ListView
+        return "Item{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
+
+    // Getters and setters
+
 }
