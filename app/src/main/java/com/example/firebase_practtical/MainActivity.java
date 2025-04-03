@@ -1,8 +1,7 @@
 package com.example.firebase_practtical;
 
-
 import android.os.Bundle;
-
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -71,13 +70,22 @@ public class MainActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.dialog_update, null);
         final EditText inputId = view.findViewById(R.id.inputId);
         final EditText inputName = view.findViewById(R.id.inputName);
+
+        // Set input type to number for ID field
+        inputId.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         builder.setView(view);
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             String id = inputId.getText().toString().trim();
             String name = inputName.getText().toString().trim();
             if (!id.isEmpty() && !name.isEmpty()) {
-                addItem(id, name);
+                // Additional check to ensure ID contains only numbers
+                if (id.matches("\\d+")) {
+                    addItem(id, name);
+                } else {
+                    Toast.makeText(MainActivity.this, "ID must contain only numbers", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(MainActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -113,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.dialog_update, null);
         final EditText inputId = view.findViewById(R.id.inputId);
         final EditText inputName = view.findViewById(R.id.inputName);
+
+        // Set input type to number for ID field
+        inputId.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         inputId.setText(item.getId());
         inputName.setText(item.getName());
         builder.setView(view);
@@ -121,11 +133,15 @@ public class MainActivity extends AppCompatActivity {
             String newId = inputId.getText().toString().trim();
             String newName = inputName.getText().toString().trim();
             if (!newId.isEmpty() && !newName.isEmpty()) {
-                if (!newId.equals(item.getId())) {
-                    mDatabase.child(item.getId()).removeValue();
+                if (newId.matches("\\d+")) {
+                    if (!newId.equals(item.getId())) {
+                        mDatabase.child(item.getId()).removeValue();
+                    }
+                    Item updatedItem = new Item(newId, newName);
+                    mDatabase.child(newId).setValue(updatedItem);
+                } else {
+                    Toast.makeText(MainActivity.this, "ID must contain only numbers", Toast.LENGTH_SHORT).show();
                 }
-                Item updatedItem = new Item(newId, newName);
-                mDatabase.child(newId).setValue(updatedItem);
             } else {
                 Toast.makeText(MainActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
             }
